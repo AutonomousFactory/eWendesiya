@@ -20,3 +20,76 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+
+//perm for roles
+Route::group(['middleware' => ['permission:view_roles']], function () {
+
+    //roles/index
+    Route::get('/roles/index', 'RoleController@index');
+
+    //roles/add
+    Route::group(['middleware' => ['permission:create_roles']], function () {
+        Route::get('/roles/add', 'RoleController@create');
+        Route::post('/roles/store', 'RoleController@store');
+    });
+
+    //roles/delete
+    Route::group(['middleware' => ['permission:delete_roles']], function () {
+        Route::get('/roles/delete/{id}', 'RoleController@destroy');
+    });
+
+    //roles/edit
+    Route::group(['middleware' => ['permission:update_roles']], function () {
+        Route::get('/roles/edit/{id}', 'RoleController@edit');
+        Route::post('/roles/update/{id}', 'RoleController@update');
+        Route::get('chnage_role_status', 'RoleController@chnage_role_status');
+
+    });
+});
+
+//perm for perms
+Route::group(['middleware' => ['permission:view_permissions']], function () {
+
+    //perms/index
+    Route::get('/permissions/index', 'PermissionController@index');
+
+    //permissions/add
+    Route::group(['middleware' => ['permission:create_permissions']], function () {
+        Route::get('/permissions/add', 'PermissionController@create');
+        Route::post('/permissions/store', 'PermissionController@store');
+    });
+
+    //permissions/edit
+    Route::group(['middleware' => ['permission:update_permissions']], function () {
+        Route::get('/permissions/edit/{id}', 'PermissionController@edit');
+        Route::post('/permissions/update/{id}', 'PermissionController@update');
+    });
+
+    //permissions/delete
+    Route::group(['middleware' => ['permission:delete_permissions']], function () {
+        Route::get('/permissions/delete/{id}', 'PermissionController@destroy');
+    });
+
+});
+
+#view all users
+Route::get('/users/index', 'UserController@index');
+
+//users/add
+Route::group(['middleware' => ['permission:create_users']], function () {
+    Route::get('/users/add', 'UserController@create');
+    Route::post('/users/store', 'UserController@store');
+});
+
+//users/edit
+Route::group(['middleware' => ['permission:update_users']], function () {
+    Route::get('/users/edit/{id}', 'UserController@edit');
+    Route::post('/users/update/{id}', 'UserController@update');
+    Route::get('change_user_status', 'UserController@change_user_status');
+});
+
+//users/delete
+Route::group(['middleware' => ['permission:delete_users']], function () {
+    Route::get('/users/delete/{id}', 'UserController@destroy');
+});
